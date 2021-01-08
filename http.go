@@ -72,11 +72,11 @@ func GetUrlBuild(link string, data map[string]string) string {
 
 func (h *HttpSend) send(method string) ([]byte, error) {
 	var (
-		req       *http.Request
-		resp      *http.Response
-		client    http.Client
-		send_data string
-		err       error
+		req      *http.Request
+		resp     *http.Response
+		client   http.Client
+		sendData string
+		err      error
 	)
 
 	if len(h.Body) > 0 {
@@ -85,14 +85,14 @@ func (h *HttpSend) send(method string) ([]byte, error) {
 			if json_err != nil {
 				return nil, json_err
 			}
-			send_data = string(send_body)
+			sendData = string(send_body)
 		} else {
 			send_body := http.Request{}
 			send_body.ParseForm()
 			for k, v := range h.Body {
 				send_body.Form.Add(k, v)
 			}
-			send_data = send_body.Form.Encode()
+			sendData = send_body.Form.Encode()
 		}
 	}
 
@@ -101,7 +101,7 @@ func (h *HttpSend) send(method string) ([]byte, error) {
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
 
-	req, err = http.NewRequest(method, h.Link, strings.NewReader(send_data))
+	req, err = http.NewRequest(method, h.Link, strings.NewReader(sendData))
 	if err != nil {
 		return nil, err
 	}
