@@ -8,11 +8,11 @@ import (
 func Contains(slice, contains interface{}) bool {
 
 	// Determine what type the "contains" variable is, then act on it
-	switch slice.(type) {
+	switch v := slice.(type) {
 	case []bool:
-		return ContainsBool(slice.([]bool), contains.(bool))
+		return ContainsBool(v, contains.(bool))
 	case []int:
-		return ContainsInt(slice.([]int), contains.(int))
+		return ContainsInt(v, contains.(int))
 	case []int8:
 		var typedContains int8
 		if _, ok := contains.(int); ok {
@@ -288,7 +288,6 @@ func ContainsObject(slice interface{}, contains interface{}) bool {
 	}
 	return false
 }
-
 
 func objectsAreEqual(left, right interface{}) bool {
 

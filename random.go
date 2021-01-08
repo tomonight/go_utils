@@ -3,15 +3,12 @@ package utils
 import (
 	"crypto/rand"
 	"errors"
+	"github.com/nu7hatch/gouuid"
 	"math/big"
 	mrand "math/rand"
 	"strings"
-	"github.com/nu7hatch/gouuid"
 	"time"
 )
-
-
-
 
 //GenerateUUID uuid
 func GenerateUUID() string {
@@ -20,12 +17,12 @@ func GenerateUUID() string {
 }
 
 //RandInt random a number
-func RandInt(min, max int,isLoop bool) int {
+func RandInt(min, max int, isLoop bool) int {
 	if min >= max || min == 0 || max == 0 {
 		return max
 	}
 	if isLoop {
-		time.Sleep(10*time.Nanosecond)
+		time.Sleep(10 * time.Nanosecond)
 	}
 
 	mrand.Seed(time.Now().UnixNano())
@@ -60,7 +57,7 @@ func RandomString(n int, allowedChars ...[]rune) string {
 }
 
 //
-func RandomInt(min,max int) int{
+func RandomInt(min, max int) int {
 	return 0
 }
 
