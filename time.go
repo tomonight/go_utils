@@ -40,7 +40,7 @@ func ParseTimestamp2String(t int64) string {
 
 //"1136185506"  -> 2006-01-02 15:05:06
 func ParseTimestampStr2String(ts string) string {
-	t, _ := strconv.Atoi("ts")
+	t, _ := strconv.Atoi(ts)
 	if t == 0 {
 		return ""
 	}
