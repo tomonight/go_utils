@@ -1,14 +1,15 @@
 package sort
 
+//
 func insertAsc(data []int) {
-	for i := 1; i < len(data); i++ {
-		tmp := data[i]
-		k := i
-		for j := i; j > 0 && tmp < data[j-1]; j-- {
-			data[j] = data[j-1]
-			k = j - 1
-		}
-		data[k] = tmp
-	}
+	for i := 0; i < len(data)-1; i++ {
 
+		tmp := data[i+1]
+		for j := i; j >= 0; j-- {
+			if tmp < data[j] {
+				data[j+1] = data[j]
+				data[j] = tmp
+			}
+		}
+	}
 }

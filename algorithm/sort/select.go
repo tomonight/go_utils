@@ -1,17 +1,17 @@
 package sort
 
 func selectAsc(data []int) {
-	for i := 0; i < len(data)-1; i++ {
-		sub := i
+	for i := 0; i < len(data); i++ {
 		min := data[i]
-		for j := i + 1; j < len(data); j++ {
-			if data[j] < min {
+		t := i
+		for j := i; j < len(data); j++ {
+			if min > data[j] {
 				min = data[j]
-				sub = j
+				t = j
 			}
 		}
-		x := data[i]
+		k := data[i]
 		data[i] = min
-		data[sub] = x
+		data[t] = k
 	}
 }

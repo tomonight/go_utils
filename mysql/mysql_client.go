@@ -1,4 +1,4 @@
-package utils
+package mysql
 
 import (
 	"database/sql"
@@ -6,8 +6,6 @@ import (
 	"fmt"
 	"regexp"
 	"strings"
-
-	_ "github.com/go-sql-driver/mysql"
 )
 
 //MySQLClientForSource mysql数据库

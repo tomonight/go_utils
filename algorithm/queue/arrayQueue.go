@@ -13,25 +13,25 @@ var maxSize int
 
 const defaultMaxSize = 1 << 12
 
-func NewArrayQueue(size ...int) ArrayQueue {
+func NewArrayQueue(size ...int) *ArrayQueue {
 	maxSize = defaultMaxSize
 	if len(size) != 0 {
 		maxSize = size[0]
 	}
 	// use 1 memory to cache rear pointer
-	return ArrayQueue{maxSize: maxSize + 1, arr: []interface{}{}}
+	return &ArrayQueue{maxSize: maxSize + 1, arr: []interface{}{}}
 }
 
 func (aq *ArrayQueue) IsEmpty() bool {
 	return aq.rear == aq.front
 }
 
-func (aq *ArrayQueue) isFull() bool {
+func (aq *ArrayQueue) IsFull() bool {
 	return (aq.rear+1)%aq.maxSize == aq.front
 }
 
 func (aq *ArrayQueue) Add(d interface{}) error {
-	if aq.isFull() {
+	if aq.IsFull() {
 		return fmt.Errorf("queue is full")
 	}
 	if len(aq.arr) < aq.maxSize {

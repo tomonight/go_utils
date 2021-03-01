@@ -6,7 +6,22 @@ type Bubble struct {
 }
 
 func (b *Bubble) Asc(data []int) {
+	flag := false
+	for i := 0; i < len(data); i++ {
+		if flag {
+			break
+		}
+		flag = true
+		for j := i; j < len(data); j++ {
+			if data[i] > data[j] {
+				tmp := data[i]
+				data[i] = data[j]
+				data[j] = tmp
+				flag = false
+			}
+		}
 
+	}
 }
 
 func bubbleAsc(data []int) {
