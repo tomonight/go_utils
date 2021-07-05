@@ -23,7 +23,8 @@ type HttpSend struct {
 	Link     string
 	SendType string
 	Header   map[string]string
-	Body     map[string]string
+	Body     map[string]interface{}
+	Param    map[string]string
 	sync.RWMutex
 }
 
@@ -34,10 +35,16 @@ func NewHttpSend(link string) *HttpSend {
 	}
 }
 
-func (h *HttpSend) SetBody(body map[string]string) {
+func (h *HttpSend) SetBody(body map[string]interface{}) {
 	h.Lock()
 	defer h.Unlock()
 	h.Body = body
+}
+
+func (h *HttpSend) SetParam(param map[string]string) {
+	h.Lock()
+	defer h.Unlock()
+	h.Param = param
 }
 
 func (h *HttpSend) SetHeader(header map[string]string) {
@@ -89,7 +96,7 @@ func (h *HttpSend) send(method string) ([]byte, error) {
 		} else {
 			send_body := http.Request{}
 			send_body.ParseForm()
-			for k, v := range h.Body {
+			for k, v := range h.Param {
 				send_body.Form.Add(k, v)
 			}
 			sendData = send_body.Form.Encode()
