@@ -10,6 +10,7 @@ import (
 	"net/url"
 	"strings"
 	"sync"
+	"time"
 )
 
 var (
@@ -23,8 +24,8 @@ type HttpSend struct {
 	Link     string
 	SendType string
 	Header   map[string]string
-	Body     map[string]interface{}
-	Param    map[string]string
+	Body     map[string]string
+	Timeout  int
 	sync.RWMutex
 }
 
@@ -35,16 +36,10 @@ func NewHttpSend(link string) *HttpSend {
 	}
 }
 
-func (h *HttpSend) SetBody(body map[string]interface{}) {
+func (h *HttpSend) SetBody(body map[string]string) {
 	h.Lock()
 	defer h.Unlock()
 	h.Body = body
-}
-
-func (h *HttpSend) SetParam(param map[string]string) {
-	h.Lock()
-	defer h.Unlock()
-	h.Param = param
 }
 
 func (h *HttpSend) SetHeader(header map[string]string) {
@@ -96,7 +91,7 @@ func (h *HttpSend) send(method string) ([]byte, error) {
 		} else {
 			send_body := http.Request{}
 			send_body.ParseForm()
-			for k, v := range h.Param {
+			for k, v := range h.Body {
 				send_body.Form.Add(k, v)
 			}
 			sendData = send_body.Form.Encode()
@@ -106,6 +101,10 @@ func (h *HttpSend) send(method string) ([]byte, error) {
 	//忽略https的证书
 	client.Transport = &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
+	client.Timeout = 30 * time.Second
+	if h.Timeout != 0 {
+		client.Timeout = time.Duration(h.Timeout) * time.Second
 	}
 
 	req, err = http.NewRequest(method, h.Link, strings.NewReader(sendData))
