@@ -24,7 +24,7 @@ type HttpSend struct {
 	Link     string
 	SendType string
 	Header   map[string]string
-	Body     map[string]interface{}
+	Body     interface{}
 	Param    map[string]string
 	Timeout  int
 	sync.RWMutex
@@ -37,7 +37,7 @@ func NewHttpSend(link string) *HttpSend {
 	}
 }
 
-func (h *HttpSend) SetBody(body map[string]interface{}) {
+func (h *HttpSend) SetBody(body interface{}) {
 	h.Lock()
 	defer h.Unlock()
 	h.Body = body
@@ -88,7 +88,7 @@ func (h *HttpSend) send(method string) ([]byte, error) {
 		err      error
 	)
 
-	if len(h.Body) > 0 {
+	if h.Body != nil {
 		if strings.ToLower(h.SendType) == SENDTYPE_JSON {
 			send_body, json_err := json.Marshal(h.Body)
 			if json_err != nil {
