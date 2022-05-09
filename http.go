@@ -10,6 +10,7 @@ import (
 	"net/url"
 	"strings"
 	"sync"
+	"time"
 )
 
 var (
@@ -23,8 +24,9 @@ type HttpSend struct {
 	Link     string
 	SendType string
 	Header   map[string]string
-	Body     map[string]interface{}
+	Body     interface{}
 	Param    map[string]string
+	Timeout  int
 	sync.RWMutex
 }
 
@@ -35,16 +37,10 @@ func NewHttpSend(link string) *HttpSend {
 	}
 }
 
-func (h *HttpSend) SetBody(body map[string]interface{}) {
+func (h *HttpSend) SetBody(body interface{}) {
 	h.Lock()
 	defer h.Unlock()
 	h.Body = body
-}
-
-func (h *HttpSend) SetParam(param map[string]string) {
-	h.Lock()
-	defer h.Unlock()
-	h.Param = param
 }
 
 func (h *HttpSend) SetHeader(header map[string]string) {
@@ -77,6 +73,12 @@ func GetUrlBuild(link string, data map[string]string) string {
 	return u.String()
 }
 
+func (h *HttpSend) SetParam(param map[string]string) {
+	h.Lock()
+	defer h.Unlock()
+	h.Param = param
+}
+
 func (h *HttpSend) send(method string) ([]byte, error) {
 	var (
 		req      *http.Request
@@ -86,7 +88,7 @@ func (h *HttpSend) send(method string) ([]byte, error) {
 		err      error
 	)
 
-	if len(h.Body) > 0 {
+	if h.Body != nil {
 		if strings.ToLower(h.SendType) == SENDTYPE_JSON {
 			send_body, json_err := json.Marshal(h.Body)
 			if json_err != nil {
@@ -106,6 +108,10 @@ func (h *HttpSend) send(method string) ([]byte, error) {
 	//忽略https的证书
 	client.Transport = &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
+	client.Timeout = 30 * time.Second
+	if h.Timeout != 0 {
+		client.Timeout = time.Duration(h.Timeout) * time.Second
 	}
 
 	req, err = http.NewRequest(method, h.Link, strings.NewReader(sendData))
