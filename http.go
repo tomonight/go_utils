@@ -141,9 +141,12 @@ func (h *HttpSend) send(method string) ([]byte, error) {
 		return nil, err
 	}
 	defer resp.Body.Close()
-
+	b, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
 	if resp.StatusCode != http.StatusOK {
-		return nil, errors.New(fmt.Sprintf("error http code :%d", resp.StatusCode))
+		return b, errors.New(fmt.Sprintf("error http code :%d", resp.StatusCode))
 	}
 
 	return ioutil.ReadAll(resp.Body)
