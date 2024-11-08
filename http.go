@@ -155,5 +155,5 @@ func (h *HttpSend) send(method string) ([]byte, error) {
 		return b, errors.New(fmt.Sprintf("error http code :%d", resp.StatusCode))
 	}
 
-	return ioutil.ReadAll(resp.Body)
+	return b, nil
 }
